@@ -1,4 +1,4 @@
-openmediavault-sonarr
+openmediavault-radarr
 =========================
 
-sonarr plugin
+Radarr plugin

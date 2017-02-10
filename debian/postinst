@@ -7,13 +7,6 @@ set -e
 
 case "$1" in
     configure)
-        # Set the default settings of the service package to those expected by
-        # OpenMediaVault.
-        if [ -z "${2}" ]; then
-            systemctl stop radarr.service
-            systemctl disable radarr.service
-        fi
-
         SERVICE_XPATH_NAME="radarr"
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 

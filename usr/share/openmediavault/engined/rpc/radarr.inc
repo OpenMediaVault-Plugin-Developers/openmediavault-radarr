@@ -28,8 +28,7 @@ require_once "openmediavault/util.inc";
 
 class OMVRpcServiceRadarr extends OMVRpcServiceAbstract
 {
-    private $RadarrSettingsFileA = "/home/radarr/.config/NzbDrone/config.xml";
-    private $RadarrSettingsFileB = "/home/radarr/.config/Radarr/config.xml";
+    private $RadarrSettingsFile = "/home/radarr/.config/Radarr/config.xml";
 
     private function getPluginName()
     {
@@ -87,17 +86,9 @@ class OMVRpcServiceRadarr extends OMVRpcServiceAbstract
         $port = 7878;
 
         // Get current port as set in Radarr's config file
-        if (file_exists($this->RadarrSettingsFileA)) {
+        if (file_exists($this->RadarrSettingsFile)) {
             $config = simplexml_load_file(
-                $this->RadarrSettingsFileA
-            );
-
-            if (!empty($config->Port)) {
-                $port = $config->Port;
-            }
-        }elseif (file_exists($this->RadarrSettingsFileB)) {
-            $config = simplexml_load_file(
-                $this->RadarrSettingsFileB
+                $this->RadarrSettingsFile
             );
 
             if (!empty($config->Port)) {

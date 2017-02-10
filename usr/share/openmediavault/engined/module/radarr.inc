@@ -19,9 +19,8 @@
 
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
+require_once "openmediavault/initscript.inc";
 require_once "openmediavault/module.inc";
-require_once "openmediavault/systemctl.inc";
-require_once "openmediavault/util.inc";
 
 class OMVModuleRadarr extends OMVModuleServiceAbstract implements
     OMVINotifyListener,
@@ -60,13 +59,13 @@ class OMVModuleRadarr extends OMVModuleServiceAbstract implements
             );
         }
 
-        $systemCtl = new OMVSystemCtl($this->getPluginName());
+        $initd = new OMVSysVInitScript($this->getPluginName());
 
         return array(
-            "name"    => $this->getName(),
+            "name"    => $this->getPluginName(),
             "title"   => gettext($this->getName()),
             "enabled" => boolval($object["enable"]),
-            "running" => $systemCtl->isActive()
+            "running" => $initd->status() == 0
         );
     }
 
@@ -87,14 +86,14 @@ class OMVModuleRadarr extends OMVModuleServiceAbstract implements
             return;
         }
 
-        $systemCtl = new OMVSystemCtl($this->getPluginName());
-        $systemCtl->enable(true); 
+        $initd = new OMVSysVInitScript($this->getPluginName(), true);
+        $initd->exec();
     }
 
     public function stopService()
     {
-        $systemCtl = new OMVSystemCtl($this->getPluginName());
-        $systemCtl->disable(true);
+        $initd = new OMVSysVInitScript($this->getPluginName());
+        $initd->exec();
     }
 
     public function bindListeners(OMVNotifyDispatcher $dispatcher)
