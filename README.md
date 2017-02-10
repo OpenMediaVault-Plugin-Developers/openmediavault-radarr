@@ -1,0 +1,4 @@
+openmediavault-sonarr
+=========================
+
+sonarr plugin

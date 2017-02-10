@@ -1,0 +1,18 @@
+Source: openmediavault-radarr
+Section: net
+Priority: optional
+Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.6
+XB-Plugin-Section: downloaders
+
+Package: openmediavault-radarr
+Architecture: all
+Depends: libmono-cil-dev (>= 3.1),
+         sqlite3 (>= 3.7),
+         mediainfo (>= 0.7.52),
+         openmediavault (>= 2.0.0),
+         ${misc:Depends}
+Homepage: https://radarr.video/
+Description: OpenMediaVault Radarr plugin
+ A fork of Sonarr to work with movies à la Couchpotato.

@@ -1,0 +1,72 @@
+#!/bin/sh
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+case "$1" in
+    configure)
+        # Set the default settings of the service package to those expected by
+        # OpenMediaVault.
+        if [ -z "${2}" ]; then
+            systemctl stop radarr.service
+            systemctl disable radarr.service
+        fi
+
+        SERVICE_XPATH_NAME="radarr"
+        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
+
+        if ! getent passwd radarr >/dev/null 2>&1; then
+            echo "Adding radarr user..."
+            adduser --quiet \
+                    --system \
+                    --group \
+                    --disabled-password \
+                    radarr
+        else
+            echo "radarr user already exists."
+        fi
+
+        if [ ! -d "/opt/Radarr" ]; then
+            echo "Downloading latest files..."
+            cd /opt
+            wget -q "https://github.com/Radarr/Radarr/releases/download/v0.2.0.299/Radarr.develop.0.2.0.299.linux.tar.gz"
+            echo "Downloading complete, extracting files..."
+            tar -zxvf Radarr.*.tar.gz
+            rm -Rf Radarr.*.tar.gz
+            #mv /opt/NzbDrone /opt/Radarr
+            chown radarr:radarr /opt/Radarr -R
+        fi
+
+        if [ -f "/var/run/radarr/radarr.pid" ]; then
+            echo "Cleaning old pid file..."
+            rm -Rf /var/run/radarr/radarr.pid
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
+
+            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "showtab" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "port" "7878"
+        fi
+
+        # Activate package triggers. These triggers are only set during the
+        # package installation.
+        dpkg-trigger update-fixperms
+        dpkg-trigger update-locale
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0
