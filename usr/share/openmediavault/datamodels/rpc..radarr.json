@@ -1,0 +1,21 @@
+[{
+	"type": "rpc",
+	"id": "rpc.radarr.setsettings",
+	"params": {
+		"type": "object",
+		"properties": {
+			"enable": {
+			    "type": "boolean",
+				"required": true
+			},
+			"showtab": {
+			    "type": "boolean",
+				"required": true
+			},
+		    "port": {
+			    "type": "integer",
+				"required": false
+		    }
+		}
+	}
+}]

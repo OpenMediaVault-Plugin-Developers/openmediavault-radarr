@@ -1,8 +1,5 @@
 #!/usr/bin/make -f
 
-# Verbose mode
-#export DH_VERBOSE=1
-
 include ./openmediavault.mk
 
 PLUGIN_NAME=radarr
@@ -23,8 +20,9 @@ binary-indep: install omv_clean_scm
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
-	dh_installdebconf
-	dh_installinit --no-start --name=${PLUGIN_NAME}
+	dh_installdebconf	
+	dh_systemd_enable --name=${PLUGIN_NAME}
+	dh_systemd_start --no-start --name=${PLUGIN_NAME}
 	dh_lintian
 	dh_link
 	dh_compress
